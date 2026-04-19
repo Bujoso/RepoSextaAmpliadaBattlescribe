@@ -10,9 +10,6 @@ on:
       - '**.gstz'
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # <--- Esto elimina la advertencia
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,20 +18,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        # Prepara el entorno .NET necesario para la herramienta
 
-      - name: Install bsdata-cli
-        run: npm install -g bsdata-cli
+      - name: Install wham CLI
+        run: dotnet tool install --global wham
+        # Instala la herramienta oficial de la comunidad BattleScribe
 
       - name: Generate Index
-        run: bsdata index ./
+        run: wham index ./
+        # Escanea la carpeta y genera el index.bsi
 
       - name: Commit and Push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add index.bsi
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Release: Actualización automática del índice" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Release: Auto-generando index.bsi" && git push)
