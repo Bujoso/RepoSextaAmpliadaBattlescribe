@@ -2,12 +2,16 @@ name: Generate BattleScribe Index
 
 on:
   push:
-    branches: [ main ] # Se ejecuta cada vez que subes algo a la rama main
+    branches: [ main ]
     paths:
       - '**.cat'
       - '**.gst'
       - '**.catz'
       - '**.gstz'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # <--- Esto elimina la advertencia
 
 jobs:
   build:
@@ -26,12 +30,11 @@ jobs:
         run: npm install -g bsdata-cli
 
       - name: Generate Index
-        run: bsdata index ./ # Escanea la raíz del repo y genera el index.bsi
+        run: bsdata index ./
 
       - name: Commit and Push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add index.bsi
-          # Solo hace commit si el archivo cambió
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Reléase: Actualización automática del índice" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Release: Actualización automática del índice" && git push)
