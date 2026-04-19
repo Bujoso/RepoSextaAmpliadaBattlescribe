@@ -26,13 +26,14 @@ jobs:
         run: dotnet tool install --global wham
         # Instala la herramienta oficial de la comunidad BattleScribe
 
-      - name: Generate Index
-        run: wham index ./
-        # Escanea la carpeta y genera el index.bsi
+      - name: Generate Repository Files
+        # Usamos el comando correcto 'publish' en el directorio actual (el punto)
+        run: wham publish .
 
       - name: Commit and Push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add index.bsi
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Release: Auto-generando index.bsi" && git push)
+          # Añadimos todo lo nuevo que haya generado la herramienta (.bsr, .bsi, etc.)
+          git add -A
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Release: Auto-generando archivos de distribución" && git push)
