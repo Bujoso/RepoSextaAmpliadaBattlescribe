@@ -6,6 +6,8 @@ on:
     paths:
       - '**.cat'
       - '**.gst'
+      - '**.catz'
+      - '**.gstz'
 
 jobs:
   build:
