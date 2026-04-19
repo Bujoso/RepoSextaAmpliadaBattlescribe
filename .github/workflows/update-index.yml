@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate Repository Files
         # Usamos el comando correcto 'publish' en el directorio actual (el punto)
-        run: wham publish .
+        run: wham publish -a bsi
 
       - name: Commit and Push
         run: |
